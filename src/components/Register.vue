@@ -3,21 +3,13 @@
     <div class="container">              
         <div class="card">
             <div class="card-body">
-                <h1>Sign Up</h1>
-                <p>Please fill in this form to create an account.</p>
-
-                <hr>                
-                <InputText type="text" v-model="user.email" ref="email" placeholder="Email" name="email"/>
-                <!-- <label for="email"><b>Email</b></label>
-                <input v-model="user.email" ref="email" type="email" placeholder="Email" name="email" /> -->
-
-                <InputText type="password" v-model="user.password" ref="psw" placeholder="Password" name="pwd"/>
-                <!-- <label for="psw"><b>Password</b></label>
-                <input v-model="user.password" ref="psw" type="password" placeholder="Password" name="psw" /> -->
-
-                <InputText type="password" v-model="user.repeatPassword" ref="psw" placeholder="Repeat Password" name="psw-repeat"/>
-                <!-- <label for="psw-repeat"><b>Repet Password</b></label>
-                <input v-model="user.repeatPassword" type="password" placeholder="Repeat Password" name="psw-repeat" /> -->
+                <h1 style="font-family: Cursive;">Sign Up</h1>
+                <p style="font-family: Cursive;">Please fill in this form to create an account.</p>
+                <hr>        
+                
+                <input type="text" v-model="user.email" class="form-control" ref="email" placeholder="Email" name="email" >
+                <input type="password" v-model="user.password" class="form-control" ref="psw" placeholder="Password" name="pwd" >
+                <input type="password" v-model="user.repeatPassword" class="form-control" ref="psw-repeat" placeholder="Repeat Password" name="psw-repeat" >
 
                 <label>
                     <input type="checkbox" checked name="remember" style="margin-bottom: 15px;" /> Remember me
@@ -25,9 +17,7 @@
                 
                 <div class="clearfix">
                     <Button label="Cancel" v-on:click="cancel" severity="danger" />
-                    <Button label="Sign Up" v-on:click="signup" severity="success" />
-                    <!-- <button type="button" class="cancelBtn" v-on:click="back">Cancel</button>
-                    <button type="button" class="signUpBtn" v-on:click="signup">Sign Up</button> -->
+                    <Button label="Sign Up" v-on:click="signUp" severity="success" />                   
                 </div>
             </div>
         </div>        
@@ -37,14 +27,12 @@
 <script>
     import axios from 'axios';
     import Swal from 'sweetalert2';
-    import InputText from 'primevue/inputtext';
+
     import Button from 'primevue/button';
 
     export default({
         components: {
-            InputText,
-            Button
-            // Checkbox
+            Button            
         },
         data() {
             return {
@@ -60,7 +48,7 @@
             cancel() {
                 this.$router.push({ name: 'Login' });
             },
-            signup() {
+            signUp() {
                 if (this.checkValidation()) {
                     axios.post(this.hostname + "/api/Auth/register", 
                         {
@@ -69,19 +57,20 @@
                             "confirmPassword": this.user.repeatPassword
                         },)
                         .then(response => {
+                            console.log(response.data);
                             if (response.data) {
                                 Swal.fire("User Registered Successfully!")
                                     .then(() => {
-                                        this.back();
+                                        this.cancel();
                                     });
                             }
                             else {
                                 Swal.fire("Error: Something went wrong, Try again later!")
                             }                        
                         })
-                        .catch(error => {
-                            if (error.response) {
-                                Swal.fire(error.response.data);
+                        .catch(error => {                            
+                            if (error.response.data[0].Code) {
+                                Swal.fire(error.response.data[0].Description);
                             }
                         });
                 }
@@ -137,13 +126,6 @@
         border: 1px solid #f1f1f1;
         margin-bottom: 25px;
     }
-
-    /* button {
-        background-color: #04AA6D;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-    } */
 
     button {
         margin: 5px;

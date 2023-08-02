@@ -1,38 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<template>
-    <!-- <Layout title="Dashboard"></Layout> -->
-    <Button style="margin: 5px;" label="Log Out" v-on:click="logout" severity="danger" />
+<template>    
+    <Button style="margin: 5px;" label="Log Out" v-on:click="logOut" severity="danger" />
     <Button style="margin: 5px;" label="Add New Contact" v-on:click="addContact" severity="success" />
     <br />
     <hr />
 
-    <!-- <button v-on:click="addContact" class="my-button" style="margin: 10px 0 10px 0;">Add New Contact</button> -->
-    <!-- <table class="basic-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="contact in contacts" :key="contact.Id">
-                <td>{{ contact.Name }}</td>
-                <td>{{ contact.Email }}</td>
-                <td>{{ contact.Phonenumber }}</td>
-                <td>
-                    <button v-on:click="editContact(contact.Id)" class="my-button" style="float: left;">Edit</button>
-                    <button v-on:click="deleteContact(contact.Id)" class="my-button" style="float: left;margin-right: 5px;">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table> -->
-
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Photo</th>
+            <tr>                
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -40,49 +15,33 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="contact in contacts" :key="contact.Id">
-                <td>
-                    <img style="width: 50px; height: 50px;" src="./../assets/person1.jpg" alt="contact-photo"> 
-                </td>
+            <tr v-for="contact in contacts" :key="contact.Id">                
                 <td>{{ contact.Name }}</td>
                 <td>{{ contact.Email }}</td>
                 <td>{{ contact.Phonenumber }}</td>
-                <td>
-                    <!-- <button v-on:click="editContact(contact.Id)" class="my-button" style="float: left;">Edit</button> -->
-                    <!-- <button v-on:click="deleteContact(contact.Id)" class="my-button" style="float: left;margin-right: 5px;">Delete</button> -->
-                    
-                    <Button style="margin: 5px;" v-on:click="editContact(contact.Id)" rounded outlined icon="pi pi-bookmark" severity="secondary" aria-label="Bookmark" />
+                <td>    
+                    <Button v-on:click="editContact(contact.Id)" rounded outlined icon="pi pi-bookmark" severity="secondary" aria-label="Bookmark" />
                     <Button style="margin: 5px;" v-on:click="deleteContact(contact.Id)" rounded outlined icon="pi pi-times" severity="danger" aria-label="Cancel" />
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <hr/>
-
-    
+    <template v-if="!contacts || !contacts.length">
+        <span style="color: red;" id="emptyAgenda">No Contacts Saved on your Agenda!</span>
+    </template>
+    <hr/>    
 </template>
 
-<script>
-    // import Layout from './Layout.vue';
+<script>    
     import axios from 'axios';
-    import Swal from 'sweetalert2';
+    import Swal from 'sweetalert2'; 
 
-    // import DataTable from 'primevue/datatable';
-    // import Column from 'primevue/column';
-    import Button from 'primevue/button';
-
-    // import ColumnGroup from 'primevue/columngroup';   // optional
-    // import Row from 'primevue/row';                   // optional
+    import Button from 'primevue/button';    
 
     export default ({
-        components: {
-            // Layout,
-            // DataTable,
-            // Column,
-            Button
-            // ColumnGroup,
-            // Row
+        components: {           
+            Button            
         },
         data() {
             return {
@@ -93,7 +52,6 @@
             await this.getContacts();
         },
         setup() {
-
         },
         methods: {
             addContact() {
@@ -133,7 +91,7 @@
                             }
                         });
             },
-            logout() {
+            logOut() {
                 window.localStorage.clear();
                 this.$router.push({ name: 'Login' });
             },
@@ -141,13 +99,5 @@
     })
 </script>
 
-<style scoped>
-    /* th, td {
-        border: 1px solid black;
-        border-radius: 10px;
-    } */
-
-    img {
-        border-radius: 50%;
-    }
+<style scoped>        
 </style>

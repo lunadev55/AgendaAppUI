@@ -5,7 +5,6 @@ import Register from "./components/Register.vue"
 // lazy-loaded
 const Dashboard = () => import("./components/Dashboard.vue")
 const Contact = () => import("./components/Contact.vue")
-const NotFound = () => import("./components/404.vue")
 
 const routes = [
     {
@@ -28,11 +27,6 @@ const routes = [
         path: "/contact/:id",
         name: "Contact",
         component: Contact,
-    },
-    {
-        path: "/404",
-        name: "404",
-        component: NotFound,
     }
 ];
 
@@ -58,4 +52,5 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
 export default router;

@@ -7,38 +7,24 @@
             <hr/>
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group">
-                        <!-- <label for="username">Username:</label>
-                        <input v-model="user.username" ref="username" type="text" class="form-control" placeholder="Username" name="username" /> -->      
-                        <!-- <InputText id="username" v-model="user.username" ref="username" name="username" />
-                        <label for="username">Username</label> -->
-                        <!-- <span class="p-float-label">
-                            <InputText id="username" v-model="user.username" ref="username" name="username" />
-                            <label for="username">Username</label>
-                        </span> -->
-                        <!-- <label for="username">Username:</label> -->
-                        <InputText type="text" v-model="user.username" ref="username" placeholder="Username" name="username"/>
+                    <div class="form-group">   
+                        <input type="text" v-model="user.username" class="form-control" ref="username" placeholder="Username" name="username" aria-describedby="basic-addon1" >    
                     </div>
                     <hr />
-                    <div class="form-group">
-                        <!-- <label for="pwd">Password:</label>
-                        <input v-model="user.password" ref="psw" type="password" class="form-control" placeholder="Password" name="pwd" /> -->
-                        <InputText type="password" v-model="user.password" ref="psw" placeholder="Password" name="pwd"/>
+                    <div class="form-group">    
+                        <input type="password" v-model="user.password" class="form-control" ref="psw" placeholder="Password" name="pwd" aria-describedby="basic-addon1" >
                     </div>
                     <br />
                     <div class="form-group form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="remember"> Remember me
-                            <!-- <Checkbox v-model="checked" :binary="true" name="remember" /> Remember me -->
+                            <input class="form-check-input" type="checkbox" name="remember"> Remember me                            
                         </label>
                     </div>
-                    <div class="clearfix">
-                        <!-- <button type="button" class="signin" v-on:click="login">Sign in</button> -->
-                        <!-- <Button label="Sign in" v-on:click="login" /> -->
-                        <Button label="Sign in" v-on:click="login" />
-                        <!-- <button type="button" class="signup" v-on:click="signup">Sign up</button> -->
-                        <!-- <Button label="Sign up" v-on:click="signup" /> -->
-                        <Button label="Sign up" v-on:click="signup" severity="help" />
+                    <div class="clearfix">                        
+                        <Button label="Sign in" v-on:click="logIn" />                        
+                        <Button label="Sign up" v-on:click="signUp" severity="help" />
+
+                        <div id="loader" hidden class="loader"></div>
                     </div>
                 </div>
             </div>
@@ -49,15 +35,12 @@
 <script>
     import axios from 'axios';
     import Swal from 'sweetalert2';
-    import InputText from 'primevue/inputtext';
-    import Button from 'primevue/button';
-    // import Checkbox from 'primevue/checkbox';
 
-    export default {    
+    import Button from 'primevue/button';
+
+    export default {                  
         components: {
-            InputText,
-            Button
-            // Checkbox
+            Button,
         },
         data() {
             return {
@@ -68,12 +51,13 @@
             }
         },
         methods: {
-            signup() {
+            signUp() {
                 this.$router.push({ name: 'Register' });
             },
-            login() {
+            logIn() {
                 if (this.checkValidation()) {  
-                    axios.post(this.hostname + "/api/Auth/entrar", 
+                    document.getElementById('loader').hidden = false;
+                    axios.post(this.hostname + "/api/Auth/login", 
                         {
                             "email": this.user.username,
                             "password": this.user.password
@@ -87,15 +71,15 @@
                         })
                         .catch(error => {
                             if (error.response) {
-                                Swal.fire(error.response.data);
+                                document.getElementById('loader').hidden = true;
+                                Swal.fire(error.response.data);                                
                             }
                         })
                 }
             },
             checkValidation() {
-                if (!this.user.username) {
-                    this.$refs.username.focus();
-                    // this.$refs['username'].focus();
+                if (!this.user.username) {      
+                    this.$refs.username.focus();                               
                     Swal.fire("Username is a required field!");
                     return;
                 }
@@ -119,20 +103,21 @@
 
     button {
         margin: 5px;
+    }    
+
+    .loader {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid black; 
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 2s linear infinite;
+        margin-left: 45%;
+        margin-bottom: 10px;
     }
 
-    /* button {
-        background-color: red;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        opacity: 0.9;
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
-
-    button:hover {
-        opacity: 1;
-    } */
 </style>
